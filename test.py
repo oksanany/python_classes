@@ -12,9 +12,13 @@ class StrategyDeal:
     def get_target_percents(self):
         # вернуть список процентов, как в примере, округленные до 3 знака [6.912, 13.376, 16.857]
         percent_targets = []
+        targets_for_banks = []
         for t in self.targets:
-            per_t = round(100*t/self.entry - 1, 3)
+            tt = t/self.entry
+            targets_for_banks.append(tt)
+            per_t = round(100*(tt - 1), 3)
             percent_targets.append(per_t)
+        self.targets_for_banks = targets_for_banks
         return percent_targets
 
 
@@ -23,8 +27,8 @@ class StrategyDeal:
         # список значений банков, если продавать активы по таргетам, как в пример, округленные до 3 знака [1069.12, 1133.764, 1168.573]
         percent_targets = self.get_target_percents()
         banks = []
-        for t in percent_targets:
-            banks.append(round(self.bank*(1 + t/100), 3))
+        for i, t in enumerate(percent_targets):
+            banks.append(round(self.bank*self.targets_for_banks[i], 3))
         return banks
 
     def formatted_content(self):
